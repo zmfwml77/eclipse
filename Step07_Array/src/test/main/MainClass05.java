@@ -17,7 +17,7 @@ public class MainClass05 {
 			cars[i]=new Car();
 		}
 		//3. cars  배열에 저장된 Car 객체의 참조값을 순서대로 참조해서 
-		//.drive() 메소드를 호출해 보세요. (저는 콘솔창에 무언가 출력하라고 하지 않았습니다)
+		//.drive() 메소드를 호출해 보세요. ( 저는 콘솔창에 무언가 출력하라고 하지 않았습니다 )
 		/*
 		cars[0].drive();
 		cars[1].drive();

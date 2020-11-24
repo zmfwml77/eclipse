@@ -16,9 +16,10 @@ package test.main;
 public class MainClass01 {
 	public static void main(String[] args) {
 		//기본 데이터 type
-		int num1=10;
+		int num1=10; // num. 하면 기본 데이터 type이기 때문에 아무것도 안 뜸
 		//참조 데이터 type
-		Integer num2=10;
+		String name="kim"; // name. 하면 참조되는 목록들이 나열
+		Integer num2=10;   //  num2. 하면 참조되는 목록들이 나열
 		
 		//참조 데이터 type  이지만 기본 데이터 type 과 동일 하게 사용할수 있다.
 		int result1=num2+1;
