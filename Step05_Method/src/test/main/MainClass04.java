@@ -21,6 +21,7 @@ public class MainClass04 {
 		//new Phone() => Phone type
 		//new MyObject().usePhone(new Phone()) => void니까 type 이 없음.
 		// type 이 없기 때문에 변수에 담을 수 없음
+		m1.usePhone(p1);
 	}
 }
 
