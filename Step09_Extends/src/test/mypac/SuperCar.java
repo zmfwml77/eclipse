@@ -11,7 +11,7 @@ public class SuperCar extends Car{
 	}
 	//빨리 달리는 메소드
 	public void driveFast() {
-		if(this.engine == null) {
+		if(this.engine == null) { //여기서 this 는 SuperCar가 아닌 모든 객체의 참조값.
 			System.out.println("Engine 객체가 없어서 달릴 수가 없어요");
 			return; // 메소드 끝내기
 		}
