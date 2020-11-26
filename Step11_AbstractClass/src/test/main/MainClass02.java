@@ -18,6 +18,6 @@ public class MainClass02 {
 	//Weapon type의 참조값을 인자로 전달받는 메소드
 	public static void useWeapon(Weapon w) {
 		w.prepare();
-		w.attck();
+		w.attack();
 	}
 }
