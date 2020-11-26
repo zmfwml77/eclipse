@@ -1,6 +1,11 @@
 package test.mypac;
 
 public class HandPhone extends Phone/* 'expends Object' 가 생략돼있음 */{
+	//디폴트 생성자
+	public HandPhone() {
+		System.out.println("HandPhone() 생성자 호출됨");
+	}
+	
 	//디폴트 생성자 'public HandPhone(){}' 가 생략돼있음
 	//이동중에 전화를 걸어요
 	public void mobileCall() {

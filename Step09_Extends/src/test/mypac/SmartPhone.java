@@ -1,8 +1,16 @@
 package test.mypac;
 
-public class SmartPhone extends HandPhone{
+//SmartPhone 클래스를 종단 클래스로 만드는 final 예약어
+public final class SmartPhone extends HandPhone{
+	//디폴트 생성자
+	public SmartPhone() {
+		System.out.println("SmartPhone() 생성자 호출됨");
+	}
+	
 	//인터넷 하는 메소드
 	public void doInternet() {
+		super.takePicture();
+		this.takePicture();
 		System.out.println("인터넷을 해요");
 	}
 	//이 메소드는 재정의한 메소드라고 표시해주는 어노테이션(@)
@@ -17,5 +25,9 @@ public class SmartPhone extends HandPhone{
 		//부모메소드를 호출해야 하는지 아닌지는 그때그때 클래스에 따라 다르므로
 		//클래스 사용법을 학습해서 선택을 해야한다.
 		System.out.println("1000만 화소의 사진을 찍어요");
+		
+		
+		super.takePicture();
+		this.takePicture();
 	}
 }
