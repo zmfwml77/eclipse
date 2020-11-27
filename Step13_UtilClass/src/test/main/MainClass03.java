@@ -1,6 +1,7 @@
 package test.main;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainClass03 {
 	public static void main(String[] args) {
@@ -12,7 +13,7 @@ public class MainClass03 {
 		//만일 아래와 같이 담는다면 방의 크기를 동적으로 조절할 수 없다.
 //		String[] names= {"김구라","해골","원숭이"};
 		
-		ArrayList<String> names=new ArrayList<String>();
+		List<String> names=new ArrayList<String>();
 		names.add("김구라");
 		names.add("해골");
 		names.add("원숭이");
