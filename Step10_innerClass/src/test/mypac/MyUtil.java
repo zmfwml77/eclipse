@@ -14,12 +14,12 @@ public class MyUtil {
 		이런 편리함 때문에 android 프로그래밍 할 때 종종 사용된다.
 	 */
 	public class User{
+//		String owner="원숭이";
 		public void doSomething() {
 			//바깥에 자신을 포함하고 있는 객체의 참조값을 가리키는 방법은
 			//바깥클래스명.this 이다
 			System.out.println(MyUtil.this.owner);
 			MyUtil.this.test();
-			
 			//혼돈의 소지가 없다면 MyUtil.this 생략가능
 			//'혼돈의 소지'의 예시는 doSomething class안에 'String owner="원숭이";' 가 될 수 있음.
 			System.out.println(owner);
@@ -28,7 +28,7 @@ public class MyUtil {
 			
 			//아래의 type을 확인해보세요.
 			MyUtil a = MyUtil.this;
-			User b=this;
+			User b=this; //여기 this 는 User class를 지칭
 		}
 	}
 }

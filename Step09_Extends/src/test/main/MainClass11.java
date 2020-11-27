@@ -11,7 +11,7 @@ public class MainClass11 {
 		 * 
 		 * =>부모객체에서 먼저 호출되고 하나의 묶음(id)으로 관리됨.
 		 */
-		Object p1=new SmartPhone();
+		new SmartPhone();
 		Phone p2=new SmartPhone();
 //		HandPhone p3=new SmartPhone();   도 가능
 //		SmartPhone p4=new SmartPhone();  도 가능

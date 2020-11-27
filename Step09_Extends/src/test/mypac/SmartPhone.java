@@ -10,7 +10,7 @@ public final class SmartPhone extends HandPhone{
 	//인터넷 하는 메소드
 	public void doInternet() {
 		super.takePicture();
-		this.takePicture();
+		this.takePicture(); 
 		System.out.println("인터넷을 해요");
 	}
 	//이 메소드는 재정의한 메소드라고 표시해주는 어노테이션(@)
