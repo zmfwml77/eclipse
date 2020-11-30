@@ -20,6 +20,8 @@ public class MainClass01 {
 		//참조 데이터 type
 		String name="kim"; // name. 하면 참조되는 목록들이 나열
 		Integer num2=10;   //  num2. 하면 참조되는 목록들이 나열
+		int a =num2.SIZE;
+		System.out.println(a);
 		
 		//참조 데이터 type  이지만 기본 데이터 type 과 동일 하게 사용할수 있다.
 		int result1=num2+1;

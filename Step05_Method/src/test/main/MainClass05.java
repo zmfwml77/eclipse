@@ -13,3 +13,5 @@ public class MainClass05 {
 		House myHome=MyObject.buyHouse();
 	}
 }
+//MyObject.callPhone(new Phone());
+//House myHome=MyObject.buyHouse();

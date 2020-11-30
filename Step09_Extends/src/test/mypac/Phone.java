@@ -4,7 +4,7 @@ package test.mypac;
 //어떤 클래스도 extends 하지 않으면 자동으로 Object 클래스를 상속받게 된다.
 //따라서 Object 클래스를 상속받을 거라면 생략이 가능하다
 public class Phone extends Object {
-	//e=디폴트 생성자
+	//디폴트 생성자
 	public Phone() {
 		System.out.println("Phone() 생성자 호출됨");
 	}

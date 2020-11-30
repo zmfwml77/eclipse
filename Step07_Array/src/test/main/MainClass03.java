@@ -8,5 +8,10 @@ public class MainClass03 {
 			String tmp=names[i];
 			System.out.println(tmp);
 		}
+		System.out.println("");
+		
+		for(int i=0; i<names.length; i++) {
+			System.out.println(names[i]);
+		}
 	}
 }

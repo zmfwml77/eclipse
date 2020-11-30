@@ -8,14 +8,14 @@ public class MainClass05 {
 		//참조값을 cars 라는 지역 변수에 담아 보세요.
 		Car[] cars=new Car[3];
 		//2. cars  배열에 Car 객체를 생성해서 순서대로 담아 보세요. (총3개)
+		for(int i=0; i<cars.length; i++) {
+			cars[i]=new Car();
+		}
 		/*
 		cars[0]=new Car();
 		cars[1]=new Car();
 		cars[2]=new Car();
 		*/
-		for(int i=0; i<cars.length; i++) {
-			cars[i]=new Car();
-		}
 		//3. cars  배열에 저장된 Car 객체의 참조값을 순서대로 참조해서 
 		//.drive() 메소드를 호출해 보세요. ( 저는 콘솔창에 무언가 출력하라고 하지 않았습니다 )
 		/*
@@ -23,12 +23,15 @@ public class MainClass05 {
 		cars[1].drive();
 		cars[2].drive();
 		*/
-		for(int i=0; i<cars.length; i++) {
-			cars[i].drive();
-		}
 	}
 }
-
-
+//Car[] cars=new Car[3];
+//
+//for(int i=0; i<cars.length; i++) {
+//	cars[i]=new Car();
+//	}
+//	for(int i=0; i<cars.length; i++) {
+//		cars[i].drive();
+//	}
 
 

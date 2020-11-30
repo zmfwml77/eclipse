@@ -17,26 +17,23 @@ public class MainClass05 {
 		 * 1번째 친구 이름 : 해골
 		 * 2번째 친구 이름 : 원숭이
 		 */
-		//내 답 다시 코드짜기
-//		List<String> member=new ArrayList<>();
-//		member.add("김구라");
-//		member.add("해골");
-//		member.add("원숭이");
-//		new Scanner(System.in);
-//		for(int i=0; i<3; i++) {
-//			member.get(i);
-//		}
-//		for(int j=0; j<3; j++) {
-//			System.out.println(j+"번째 친구 이름 : "+member.get(j));
-//		}
-		//다른 사람 답
-		List<String> mem=new ArrayList<>();
-	      for(int i=0; i<5; i++) {
-	         Scanner scan=new Scanner(System.in);
-	         System.out.println("친구 이름을 작성: ");
-	         String names=scan.nextLine();
-	         mem.add(names);
-	         System.out.println(i+" 번째 친구 이름: "+mem.get(i));
-	      }
+		//여러개의 문자열의 참조값을 저장하기 위한 객체 => 가변배열
+		/*'Array'생략 가능*/List<String> names =new ArrayList<String>();
+			//키보드로부터 문자열을 입력받기 위해 생성한 객체
+		 	Scanner scan=new Scanner(System.in);
+		 	//5번 반복을 수행할 for문 구성
+		 	for(int i=0; i<5; i++) {
+		 		System.out.println("친구 이름 입력");
+		 		String line=scan.nextLine();
+		 		names.add(line);
+		 	}
+		 	//반복문 돌면서 names에 저장된 내용을 정해진 형식으로 콘솔창에 출력하기
+		 	for(int i=0; i<5; i++) {
+		 		String tmp=names.get(i);
+		 		System.out.println(i+"번째 친구 이름 : "+tmp);
+		 	}
+		 	for(String tmp:names) {
+		 		System.out.println("친구 이름 : "+tmp);
+		 	}
 	}
 }
