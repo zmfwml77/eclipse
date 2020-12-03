@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 import test.mypac.DownloadTask;
 import test.mypac.SubThread;
 
-public class MainFrame06 extends JFrame implements ActionListener{
+public class MainFrame08 extends JFrame implements ActionListener{
 	//생성자
-	public MainFrame06(String title) {
+	public MainFrame08(String title) {
 		super(title);
 		setLayout(new BorderLayout());
 		JButton btn=new JButton("알림 띄우기");
@@ -54,7 +54,7 @@ public class MainFrame06 extends JFrame implements ActionListener{
 	}
 	
 	public static void main(String[] args) {
-		MainFrame06 f=new MainFrame06("메인 프레임");
+		MainFrame08 f=new MainFrame08("메인 프레임");
 		f.setBounds(100, 100, 500, 300);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
