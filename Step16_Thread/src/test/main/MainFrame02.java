@@ -18,25 +18,31 @@ public class MainFrame02 extends JFrame implements ActionListener{
 		JButton btn=new JButton("알림 띄우기");
 		btn.addActionListener(this);
 		
-		add(btn, BorderLayout.NORTH)
-;	}
+		add(btn, BorderLayout.NORTH);
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		JOptionPane.showMessageDialog(this, "알림 입니다!!");
+		JOptionPane.showMessageDialog(this, "알림 입니다.!!!");
 		
-		//3.Thread 클래스를 상속받은 SubThread 클래스로 객체 생성
+		//3. Thread 클래스를 상속받은 SubThread 클래스로 객체 생성
 		Thread t=new SubThread();
-		//4.start() 메소드를 호출하면 새로운 작업단위가 시작된다.
+		//4. start() 메소드를 호출하면 새로운 작업단위가 시작된다.
 		t.start();
 		
-		System.out.println("actionPerformed() 메소드가 리턴합니다.");
+		System.out.println("actionPerformed() 메소드가 리턴 합니다.");
 	}
 	
 	public static void main(String[] args) {
-		MainFrame02 f=new MainFrame02("메인 프레임");
+		MainFrame02 f=new MainFrame02("메인 프레임02");
 		f.setBounds(100, 100, 500, 300);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}
 }
+
+
+
+
+
+
