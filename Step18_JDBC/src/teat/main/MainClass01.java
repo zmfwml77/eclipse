@@ -53,6 +53,7 @@ public class MainClass01 {
 			e.printStackTrace();
 		} finally {
 			try {
+				//NullPointerException 을 방지하기위한 확인처리.
 				if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
