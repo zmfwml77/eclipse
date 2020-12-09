@@ -32,34 +32,34 @@ public class MainClass04 {
 		//위 코드는 몰라도 되지만 흐름은 이해하기
 		
 		//UPDATE 문이기 때문에 결과값 (ResultSet) 은 필요없음!
-				PreparedStatement pstmt=null;
-				int flag=0;
-				try {
-					String sql="UPDATE member"
-							+ " SET addr=?"
-							+ " WHERE num=?";
-					pstmt=conn.prepareStatement(sql);
-					// ? 에 순서대로 값을 바인딩 하기
-					pstmt.setString(1, addr);
-					pstmt.setInt(2, num);
-					//executeUpdate() 는 INSERT, UPDATE, DELETE 들을 사용할 떄 사용.
-					//executeQuery() 는 SELECT 문을 사용할 때 사용.
-					//완성된 sql문을 수행하고 번화된 row의 갯수를 리턴받는다.
-					flag=pstmt.executeUpdate();
-					System.out.println("회원 정보를 수정했습니다.");
-					System.out.println(flag);
-				} catch (Exception e){
-					e.printStackTrace();
-				} finally {
-					try {
-						if(pstmt!=null) pstmt.close();
-						if(conn!=null) conn.close();
-					} catch (Exception e2) {}
-				}
-				if(flag>0) {
-					System.out.println("작업(INSERT) 성공");
-				} else {
-					System.out.println("작업(INSERT) 실패");
-				}
+		PreparedStatement pstmt=null;
+		int flag=0;
+		try {
+			String sql="UPDATE member"
+					+ " SET addr=?"
+					+ " WHERE num=?";
+			pstmt=conn.prepareStatement(sql);
+			// ? 에 순서대로 값을 바인딩 하기
+			pstmt.setString(1, addr);
+			pstmt.setInt(2, num);
+			//executeUpdate() 는 INSERT, UPDATE, DELETE 들을 사용할 떄 사용.
+			//executeQuery() 는 SELECT 문을 사용할 때 사용.
+			//완성된 sql문을 수행하고 번화된 row의 갯수를 리턴받는다.
+			flag=pstmt.executeUpdate();
+			System.out.println("회원 정보를 수정했습니다.");
+			System.out.println(flag);
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (Exception e2) {}
+		}
+		if(flag>0) {
+			System.out.println("작업(INSERT) 성공");
+		} else {
+			System.out.println("작업(INSERT) 실패");
+		}
 	}
 }
