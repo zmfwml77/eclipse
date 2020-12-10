@@ -75,9 +75,11 @@ public class MemberFrame extends JFrame implements ActionListener{
 		
 		//삭제버튼
 		JButton btn_delete=new JButton("삭제");
-		
-		btn_delete.addActionListener();
+		btn_delete.addActionListener(this);
 		btn_delete.setActionCommand("delete");
+
+		//삭제 버튼을 상단 페널에 추가
+		topPanel.add(btn_delete);
 	}
 	
 	//회원 목록을 테이블에 출력하는 메소드
