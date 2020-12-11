@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import test.member.dao.MemberDao;
 import test.member.dto.MemberDto;
 
-public class MemberFrame extends JFrame implements ActionListener{
+public class MemberFrame extends JFrame implements ActionListener, PropertyChangeListener{
 	// 선언만 하면 알아서 null 이 들어가므로 굳이 null을 만들어주지 않아도 됨.
 	JTextField text_name, text_addr; 
 	DefaultTableModel model;
@@ -60,8 +62,13 @@ public class MemberFrame extends JFrame implements ActionListener{
 		model=new DefaultTableModel(colName, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				//모두 수정 불가 하도록 설정
-					return false;
+				System.out.println(row+"|"+column);
+				//번호만 수정 불가하게 하려면 여기를 어떻게 코딩하면 될까요?
+				if(column == 0 ) { // 0번째 칼럼("번호" 칼럼)
+					return false; // 수정 불가하게
+				} else { // 나머지 칼럼은 
+					return true; // 수정 가능하게
+				}
 			}
 		};
 		//모델은 테이블에 연결하기
@@ -80,16 +87,23 @@ public class MemberFrame extends JFrame implements ActionListener{
 
 		//삭제 버튼을 상단 페널에 추가
 		topPanel.add(btn_delete);
+		//회원 목록을 주기적으로 업데이트 해주는 스레드 시작 시키기
+//		new UpdateThread().start();
+		
+		//테이블에서 수정된 데이터가 실제로 DB에도 바뀌게 하도록하는 메소드, 
+		//여기서 this는 PropertyChangeListener
+		table.addPropertyChangeListener(this);
 	}
 	
 	//회원 목록을 테이블에 출력하는 메소드
 	public void printMember() {
-		//기존에 출력된 내용 초기화
-		model.setRowCount(0); // 0개의 row로 강제로 초기화
+		
 		
 		//회원 목록을 불러오기
 		MemberDao dao=new MemberDao();
 		List<MemberDto> list=dao.selectAll();
+		//기존에 출력된 내용 초기화
+				model.setRowCount(0); // 0개의 row로 강제로 초기화
 		for(MemberDto tmp:list) {
 			// {1, "김구라", "노량진"}
 			Object[] row= {tmp.getNum(), tmp.getName(), tmp.getAddr()};
@@ -111,23 +125,32 @@ public class MemberFrame extends JFrame implements ActionListener{
 		if(commandString.equals("add")) { //추가 버튼을 눌렀을 때
 			addMember(); // 밑의 메소드 호출
 		} else if(commandString.equals("delete")) { //삭제 버튼을 눌렀을 때
-			// 선택된 row 의 인덱스를 읽어온다.
-			int selectedIndex=table.getSelectedRow();
-			if(selectedIndex == -1) {
-				JOptionPane.showMessageDialog(this, "삭제할 row를 선택해주세요");
-				return; // 메소드를 여기서 끝내라
-			} 
-			//선택한 row의 0 번 칼럼의 값(번호)을 읽어와서 int로 casting 하기
-			int num=(int)table.getValueAt(selectedIndex, 0);
+			deleteMember();
+		}
+	}
+	//회원 정보를 삭제하는 메소드
+	public void deleteMember() {
+		// 선택된 row 의 인덱스를 읽어온다.
+		int selectedIndex=table.getSelectedRow();
+		if(selectedIndex == -1) {
+			JOptionPane.showMessageDialog(this, "삭제할 row를 선택해주세요");
+			return; // 메소드를 여기서 끝내라
+		} 
+		//선택한 row의 0 번 칼럼의 값(번호)을 읽어와서 int로 casting 하기
+		int num=(int)table.getValueAt(selectedIndex, 0);
+		//삭제하기 전에 한 번 확인하기
+		int result=JOptionPane.showConfirmDialog(this, num+" 번 회원을 삭제할겨?");
+		//만일 "yes" 를 눌렀을 때
+		if(result == JOptionPane.YES_OPTION) {
 			//MemberDao 객체를 이용해서 삭제하기
 			new MemberDao().delete(num);
 			//UI 업데이트 (목록 다시 출력하기)
 			printMember();
 		}
 	}
+	
+	//회원 정보를 추가하는 메소드
 	public void addMember() {
-		
-		
 		//1. 입력한 이름과 주소를 읽어와서
 		String name=text_name.getText();
 		String addr=text_addr.getText();
@@ -146,6 +169,46 @@ public class MemberFrame extends JFrame implements ActionListener{
 			printMember();
 		} else {
 			JOptionPane.showMessageDialog(this, "추가 실패");
+		}
+	}
+	//화면을 주기적으로 update해주는 스레드
+	class UpdateThread extends Thread {
+		@Override
+		public void run() {
+			//바깥에 싸고있는 클래스의 멤버 메소드 printMember() 메소드를
+			//5초마다 한 번 씩 주기적으로 호출하기
+			while(true) {
+				try {
+					//3초 잠자다가
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//화면 업데이트
+				printMember();
+			}
+		}
+	}
+	//table 칼럼이 수정중인지 여부
+	boolean isEditing=false;
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("change!");
+		System.out.println(evt.getPropertyName());
+		//만일 table 칼럼에서 발생한 이벤트라면
+		if(evt.getPropertyName().equals("tableCellEditor")) {
+			if(isEditing) {
+				//수정된 row를 읽어와서 DB에 반영한다.
+				int selectedIndex=table.getSelectedRow();
+				int num=(int)model.getValueAt(selectedIndex, 0);
+				String name=(String)model.getValueAt(selectedIndex, 1);
+				String addr=(String)model.getValueAt(selectedIndex, 2);
+				MemberDto dto=new MemberDto(num,name,addr);
+				new MemberDao().update(dto);
+			}
+			//isEditing 의 값을 반대로 바꿔준다. true => false, false => true
+			isEditing=!isEditing; // 수정중이라고 표기한다.
 		}
 	}
 }
