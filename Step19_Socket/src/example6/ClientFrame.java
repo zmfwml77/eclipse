@@ -9,20 +9,39 @@ import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+/*
+ *  - 대화방에 현재 누가 참여하고 있는지 목록 출력하기
+ *  - 누가 새로 입장했는지 메세지 출력하기
+ *  - 누가 퇴장 했는지 메세지 출력하기
+ *  
+ *  서버에 전달되는 메세지의 종류
+ *  
+ *  1. 일반 대화 메세지
+ *     {"type":"msg", "name":"김구라", "content":"안녕하세요!"}
+ *  2. 누군가 입장했다는 메세지
+ *     {"type":"enter", "name":"해골"}
+ *  3. 누군가 퇴장했다는 메세지
+ *     {"type":"out", "name":"원숭이"}
+ *  4. 참여자 목록 메세지
+ *     {"type":"members", "list":["주뎅이","덩어리","개다리"]}
+ * 
+ */
 public class ClientFrame extends JFrame 
 		implements ActionListener, KeyListener{
 	//필요한 필드 정의하기 
@@ -41,7 +60,7 @@ public class ClientFrame extends JFrame
 		//페널을 만들어서 프레임의 위쪽에 배치하기 
 		JPanel topPanel=new JPanel();
 		topPanel.setBackground(Color.YELLOW);
-		add(topPanel, BorderLayout.NORTH);
+		add(topPanel, BorderLayout.SOUTH);
 		
 		//프레임에 UI 배치하기
 		tf=new JTextField(10);
@@ -62,6 +81,21 @@ public class ClientFrame extends JFrame
 		ta.setEditable(false);
 		//JTextField 에 KeyListener 등록하기
 		tf.addKeyListener(this);
+		
+		//참여자 목록을 출력할 준비
+		JList<String> jList=new JList<>();
+		jList.setBackground(Color.GREEN);
+		
+		JPanel rightPanel=new JPanel();
+		rightPanel.add(jList);
+		add(rightPanel, BorderLayout.EAST);
+		
+		Vector<String> enterList=new Vector<>();
+		enterList.add("참여자 목록");
+		enterList.add("김구라");
+		enterList.add("해골");
+		
+		jList.setListData(enterList);
 		
 		//소켓 접속하기 
 		connect();
@@ -96,6 +130,17 @@ public class ClientFrame extends JFrame
 					(new InputStreamReader(socket.getInputStream()));
 			//새로운 스레드를 시작 시켜서 서버에서 문자열이 도착하는지 지속적으로 대기한다.
 			new ClientThread().start();
+			//내가 입장한다고 서버에 메세지를 보낸다.
+			//JSONObject 에 정보를 담고 
+			JSONObject jsonObj=new JSONObject();
+			jsonObj.put("type", "enter");
+			jsonObj.put("name", chatName);
+			//JSONObject 에 담긴정보를 JSON 문자열로 만들어서 
+			String msg=jsonObj.toString();
+			//서버에 출력하기 
+			bw.write(msg);
+			bw.newLine();
+			bw.flush();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -104,19 +149,7 @@ public class ClientFrame extends JFrame
 	//전송 버튼을 눌렀을때 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//1. JTextField 에 입력한 문자열을 읽어와서
-		String msg=tf.getText();
-		//2. BufferedWriter 객체를 이용해서 출력한다.
-		try {
-			bw.write(chatName+" : "+msg);
-			bw.newLine();
-			bw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		//3. JTextField 에 입력한 문자열 삭제
-		tf.setText("");
+		sendMessage();
 	}
 	//서버에서 문자열이 전송되는지 지속적으로 대기하는 스레드 객체를 생성할 클래스 설계
 	class ClientThread extends Thread{
@@ -126,8 +159,24 @@ public class ClientFrame extends JFrame
 				try {
 					//대기하다가 문자열이 도착하면 메소드가 리턴한다.
 					String line=br.readLine();
-					//도착된 메세지를 JTextArea 에 개행기호와 함께 추가하기
-					ta.append(line+"\r\n");
+					//JSON 문자열을 이용해서 JSONObject 객체를 생성한다.
+					JSONObject jsonObj=new JSONObject(line);
+					// 어떤 종류의 메세지 인지 읽어와 본다.
+					String type=jsonObj.getString("type");
+					if(type.equals("enter")) {
+						String name=jsonObj.getString("name");
+						ta.append("[ "+name+" ] 님이 입장했습니다.");
+						ta.append("\r\n");
+					}else if(type.equals("msg")) {
+						String name=jsonObj.getString("name");
+						String content=jsonObj.getString("content");
+						ta.append(name+" : "+content);
+						ta.append("\r\n");
+					}else if(type.equals("members")) {
+						
+						JSONArray jaonArr=jsonObj.getJSONArray("list");
+					}
+					
 					//출력할 문서의 높이
 					int height=ta.getDocument().getLength();
 					//높이 만큼 JTextArea 를 스크롤시켜서 가장 아래에 있는 문자열이 보이게
@@ -142,18 +191,7 @@ public class ClientFrame extends JFrame
 	public void keyPressed(KeyEvent e) {
 		//만일 엔터키를 눌렀다면 
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-			//1. JTextField 에 입력한 문자열을 읽어와서
-			String msg=tf.getText();
-			//2. BufferedWriter 객체를 이용해서 출력한다.
-			try {
-				bw.write(chatName+" : "+msg);
-				bw.newLine();
-				bw.flush();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-			//3. JTextField 에 입력한 문자열 삭제
-			tf.setText("");
+			sendMessage();
 		}
 	}
 
@@ -168,21 +206,23 @@ public class ClientFrame extends JFrame
 		// TODO Auto-generated method stub
 		
 	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	//메세지를 전송하는 메소드
+	public void sendMessage() {
+		//전송할 문자열
+		String msg=tf.getText();
+		try {
+			JSONObject jsonObj=new JSONObject();
+			jsonObj.put("type", "msg");
+			jsonObj.put("name", chatName);
+			jsonObj.put("content", msg);
+			String json=jsonObj.toString();
+			bw.write(json);
+			bw.newLine();
+			bw.flush();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		tf.setText("");
+	}
+}// class ClientFrame
